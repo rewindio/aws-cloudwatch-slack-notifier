@@ -1,2 +1,6 @@
 # aws-cloudwatch-slack-notifier
-Lambda to send notifications to Slack for Cloudwatch alarms
+Make Cloudwatch alarms readable in Slack
+
+[Alama](https://raw.githubusercontent.com/rewindio/aws-cloudwatch-slack-notifier/master/images/lama-emoji.png | width=100)
+
+The AWS Cloudwatch Slack Notifier (or Alama, Alamer)
