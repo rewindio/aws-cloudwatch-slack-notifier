@@ -57,7 +57,8 @@ def lambda_handler(event, context):
     new_state = message['NewStateValue']
     reason = message['NewStateReason']
     region_str = message['Region']
-    metric_str = message['Trigger']['Namespace'] + "/" + message['Trigger']['MetricName']
+    metric_namespace = message['Trigger']['Namespace']
+    metric_name = message['Trigger']['MetricName']
 
     if 'Statistic' in message['Trigger']:
         metric_statistic = message['Trigger']['Statistic']
@@ -97,13 +98,13 @@ def lambda_handler(event, context):
                     "short": 'false'
                 },
                 {
-                    "title": "Metric",
-                    "value": metric_str,
+                    "title": "Namespace",
+                    "value": metric_namespace,
                     "short": 'false'
                 },
                 {
-                    "title": "Statistic",
-                    "value": metric_statistic,
+                    "title": "Metric",
+                    "value": metric_name,
                     "short": 'false'
                 }
             ]
