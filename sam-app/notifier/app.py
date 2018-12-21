@@ -58,10 +58,14 @@ def lambda_handler(event, context):
     reason = message['NewStateReason']
     region_str = message['Region']
     metric_str = message['Trigger']['Namespace'] + "/" + message['Trigger']['MetricName']
-    metric_statistic = message['Trigger']['Statistic']
+
+    if 'Statistic' in message['Trigger']:
+        metric_statistic = message['Trigger']['Statistic']
+    elif 'StatisticType' in message['Trigger']:
+        metric_statistic = message['Trigger']['StatisticType'] + "(" + message['Trigger']['ExtendedStatistic'] + ")"
 
     if 'Threshold' in message['Trigger']:
-        alarm_threshold = int(message['Trigger']['Threshold'])
+        alarm_threshold = message['Trigger']['Threshold']
         alarm_threshold = format(alarm_threshold,",")
     else:
         alarm_threshold = "n/a"
