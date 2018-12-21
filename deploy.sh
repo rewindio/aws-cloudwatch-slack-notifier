@@ -9,7 +9,7 @@ SSM_KMS_KEY_ID=$6
 
 pushd sam-app
 
-sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket ${BUCKET}
+sam package --template-file template.yaml --output-template-file packaged.yaml --s3-bucket ${BUCKET} --profile ${PROFILE}
 
 sam deploy \
     --template-file packaged.yaml \
