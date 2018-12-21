@@ -58,3 +58,7 @@ Outputs:
   CloudwatchToSlackFunctionName:
     Description: The name of the lambda Function
     Value: !Ref CloudwatchToSlack
+
+  SNSTopic:
+    Description: Name of the SNS topic to send alarms to
+    Value: !Ref SnsTopic
