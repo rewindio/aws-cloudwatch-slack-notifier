@@ -1,0 +1,60 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+
+Description: SAM app that forwards Cloudwatch alarms to Slack
+
+Parameters:
+  SlackChannel:
+    Type: String
+  SSMParameterSlackWebhook:
+    Type: String
+  SSMKMSKeyId:
+    Type: String
+  SNSTopicName:
+    Type: String
+
+Resources:
+  CloudwatchToSlack:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Events:
+        NotifyTopic:
+          Type: SNS
+          Properties:
+            Topic: !Ref SnsTopic
+      Handler: app.lambda_handler
+      Runtime: python3.6
+      CodeUri: notifier/build
+      Description: Format a cloudwatch alarm for posting to Slack.
+      MemorySize: 512
+      Timeout: 30
+      Environment:
+        Variables:
+          SLACK_CHANNEL: !Ref SlackChannel
+          SSM_SLACK_WEBHOOK: !Ref SSMParameterSlackWebhook
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameter*'
+              Resource:
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${SSMParameterSlackWebhook}'
+                - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter${SSMParameterSlackWebhook}'
+            - Effect: Allow
+              Action:
+                - 'kms:Decrypt'
+              Resource: !Sub 'arn:aws:kms:${AWS::Region}:${AWS::AccountId}:key/${SSMKMSKeyId}'
+
+  SnsTopic:
+    Type: 'AWS::SNS::Topic'
+    Properties:
+      TopicName: !Ref SNSTopicName
+      Subscription:
+        - Protocol: lambda
+          Endpoint: !GetAtt CloudwatchToSlack.Arn
+
+Outputs:
+  CloudwatchToSlackFunctionName:
+    Description: The name of the lambda Function
+    Value: !Ref CloudwatchToSlack
