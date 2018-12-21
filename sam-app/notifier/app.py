@@ -57,6 +57,8 @@ def lambda_handler(event, context):
     new_state = message['NewStateValue']
     reason = message['NewStateReason']
     region_str = message['Region']
+    metric_str = message['Trigger']['Namespace'] + "/" + message['Trigger']['MetricName']
+    metric_statistic = message['Trigger']['Statistic']
 
     if 'Threshold' in message['Trigger']:
         alarm_threshold = int(message['Trigger']['Threshold'])
@@ -77,6 +79,7 @@ def lambda_handler(event, context):
             "fallback": "Check the Cloudwatch console for details.",
             "color": "#EC0030",
             "title": "View Alarm Details in the AWS Console",
+            "text": reason,
             "title_link": alarm_console_link,
             "fields": [
                 {
@@ -87,6 +90,16 @@ def lambda_handler(event, context):
                  {
                     "title": "Evals Over Threshold",
                     "value": str(eval_periods),
+                    "short": 'false'
+                },
+                {
+                    "title": "Metric",
+                    "value": metric_str,
+                    "short": 'false'
+                },
+                {
+                    "title": "Statistic",
+                    "value": metric_statistic,
                     "short": 'false'
                 }
             ]
