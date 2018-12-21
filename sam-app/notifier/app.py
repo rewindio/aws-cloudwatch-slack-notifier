@@ -54,7 +54,6 @@ def lambda_handler(event, context):
 
     # Pull data out of the alarm message
     alarm_name = message['AlarmName']
-    #old_state = message['OldStateValue']
     new_state = message['NewStateValue']
     reason = message['NewStateReason']
     region_str = message['Region']
