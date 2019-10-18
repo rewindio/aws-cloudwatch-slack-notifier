@@ -21,6 +21,6 @@ sam deploy \
     --region ${REGION} \
     --profile ${PROFILE}
 
-aws cloudformation describe-stacks --stack-name cw-alarm-to-slack --query 'Stacks[].Outputs' --profile ${PROFILE} --region ${REGION}
+aws cloudformation describe-stacks --stack-name cw-alarm-to-slack-${CLEANED_SLACK_CHANNEL} --query 'Stacks[].Outputs' --profile ${PROFILE} --region ${REGION}
 
 popd
